@@ -1,0 +1,41 @@
+<launch>
+  <arg name="cloud_in" default = "/point_cloud"/>
+
+  <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+		
+    <param name="resolution"                    value="0.02"/>
+		   
+    <!-- Static global frame in which the map will be published. -->
+		<param name="frame_id"        type="string" value="world" /> 
+		<!-- <param name="base_frame_id"                 value="body"/> -->
+		
+		<!-- Maximum range in meter for inserting point cloud data when dynamically building a map. -->
+		<param name="sensor_model/max_range"        value="15.0" />
+
+		<param name="latch"                         value="false" />
+
+		<!-- <param name ="height_map"                 value="false"/> -->
+		<!-- <param name ="colored_map"                value="true"/> -->
+		<!-- <param name ="height_map"   type = "bool" value="0"/> -->
+
+		<param name="sensor_model/hit"              value="0.62" /> 
+		<param name="sensor_model/miss"             value="0.48" />
+
+    	<!-- <param name="sensor_model/min"              value="0.12" /> -->
+    	<!-- <param name="sensor_model/max"              value="0.97" /> -->
+
+		<param name="occupancy_min_z"               value="0.0" />
+		<param name="occupancy_max_z"               value="2.0" />
+
+		<!-- <param name="filter_ground"                 value="true"/> -->
+		<!-- <param name="ground_filter/distance"        value="0.1" /> -->
+		<!-- <param name="ground_filter/angle"           value="0.26"/> -->
+	  	<!-- <param name="ground_filter/plane_distance"  value="0.1" /> -->
+
+		<!-- subscribe -->
+		<remap from="/cloud_in" to="$(arg cloud_in)" />
+		
+	</node>
+
+</launch>
+
