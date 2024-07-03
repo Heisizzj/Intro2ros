@@ -16,8 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   tf
-  octomap_ros
-  cv_bridge
+  # octomap_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -114,7 +113,7 @@ catkin_package(
 #  LIBRARIES perception
 #  CATKIN_DEPENDS nodelet octomap_server roscpp std_msgs tf2_ros
 #  DEPENDS system_lib
-CATKIN_DEPENDS octomap_ros
+CATKIN_DEPENDS nodelet octomap_server
 )
 
 ###########
@@ -227,6 +226,3 @@ include_directories(
 # add_dependencies(tcl_filter ${catkin_EXPORTED_TARGETS})
 # target_link_libraries(tcl_filter ${catkin_LIBRARIES} ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBS})
 
-add_executable(trafficlight src/trafficlight.cpp)
-add_dependencies(trafficlight ${catkin_EXPORTED_TARGETS})
-target_link_libraries(trafficlight ${catkin_LIBRARIES} ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBS})
