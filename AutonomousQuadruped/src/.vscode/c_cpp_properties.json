@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/opt/ros/noetic/include/**",
+        "/home/ubuntu/AutonomousQuadruped/devel/include/**",
+        "/home/ubuntu/AutonomousQuadruped/src/utilities/fla_utils/include/**",
+        "/home/ubuntu/AutonomousQuadruped/src/mav_comm/mav_msgs/include/**",
+        "/home/ubuntu/AutonomousQuadruped/src/mav_comm/mav_planning_msgs/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

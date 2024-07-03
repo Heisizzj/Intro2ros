@@ -7,6 +7,7 @@
   <arg name="left_info_topic" default="/realsense/rgb/left_image_info" />
   <arg name="depth_image_topic" default="/realsense/depth/image" />
   <arg name="depth_info_topic" default="/realsense/depth/camera_info" />
+  <arg name="point_cloud" default="/pointcloud" />
 
   <include file="$(find simulation)/launch/unity_ros.launch" >
     <arg name="load_params" value="$(arg load_params)" />
@@ -18,6 +19,18 @@
     <arg name="depth_info_topic" value="$(arg depth_info_topic)" />
   </include>
 
+  <!--
+  <include file="$(find depth_image_proc)/launch/pointcloud_test.launch" >
+    <arg name="load_params" value="$(arg load_params)" />
+    <arg name="right_image_topic" value="$(arg right_image_topic)" />
+    <arg name="right_info_topic" value="$(arg right_info_topic)" />
+    <arg name="left_image_topic" value="$(arg left_image_topic)" />
+    <arg name="left_info_topic" value="$(arg left_info_topic)" />
+    <arg name="depth_image_topic" value="$(arg depth_image_topic)" />
+    <arg name="depth_info_topic" value="$(arg depth_info_topic)" />
+  </include>
+  -->
+  
   <node name="Simulation" pkg="simulation" type="RoboDog_Build.x86_64"/>
 
   <node pkg="simulation"
@@ -62,5 +75,26 @@
 
   <node pkg="tf2_ros" type="static_transform_publisher"
         name="depth_camera_frame_to_body"      args="0 0 0 0 0 0 /true_body /Quadrotor/Sensors/DepthCamera" />
+        
+  <node pkg="tf2_ros" type="static_transform_publisher"
+        name="Robodog_depth_camera_to_body"      args="0 0 0 0 0 -1.745 /true_body /RoboDog/base_link/SensorHolder/Sensors/DepthCamera" />
+
+        
+  <node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager" />
+
+  <node pkg="nodelet" type="nodelet" name="nodelet1"
+        args="load depth_image_proc/point_cloud_xyz nodelet_manager">
+    <!-- <remap from="camera_info" to="$(arg depth_info_topic)"/> -->
+    <remap from="image_rect" to="$(arg depth_image_topic)"/>
+    <remap from="points" to="/pointcloud"/>
+  </node>
+  
+  <!-- generate octomap -->
+  <include file="$(find octomap_server)/launch/octomap.launch" >
+    <arg name="cloud_in" value="$(arg point_cloud)"/>
+  </include>
+  
+  <!-- Visualize the point cloud and octomap using rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find octomap_server)/cfg/rviz_config.rviz"/>
 
 </launch>
