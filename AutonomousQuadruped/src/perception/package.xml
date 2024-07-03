@@ -67,6 +67,7 @@
   <exec_depend>ackermann_msgs</exec_depend>
   <buildtool_depend>catkin</buildtool_depend>
   <depend>octomap_ros</depend>
+  <depend>depth_image_proc</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
