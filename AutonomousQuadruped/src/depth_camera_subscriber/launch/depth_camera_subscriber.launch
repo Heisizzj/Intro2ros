@@ -1,0 +1,4 @@
+<launch>
+  <node name="depth_camera_subscriber" pkg="depth_camera_subscriber" type="depth_camera_subscriber" output="screen">
+  </node>
+</launch>

@@ -1,0 +1,4 @@
+<launch>
+  <node name="octomap_to_2Dmap" pkg="octomap_to_2Dmap" type="octomap_to_2Dmap" output="screen">
+  </node>
+</launch>
