@@ -1,0 +1,8 @@
+总计需要4个terminal窗口，不要忘记source
+先roscore
+然后开一个terminal用于roslaunch simulation simulation.launch
+然后开一个terminal用于rosrun keyboard keyboard_node
+然后开一个terminal用于rosrun controller_pkg controller_node
+
+在rosrun keyboard keyboard_node窗口中可以通过键盘控制机器狗前进，左转和右转
+分别对应'w','a','d'
