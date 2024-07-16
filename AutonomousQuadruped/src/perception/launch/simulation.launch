@@ -43,16 +43,16 @@
 
 
   <node pkg="tf2_ros" type="static_transform_publisher"
-        name="sim_true_body"      args="0 0 0 0 0 0 /Quadrotor/TrueState /true_body" />
+        name="sim_true_body"      args="0 0 0 0 0 0 /TrueState /true_body" />
 
   <node pkg="tf2_ros" type="static_transform_publisher"
-        name="sim_rgb_camera"      args="0 0 0 0 0 0 /camera /Quadrotor/RGBCameraLeft " />
+        name="sim_rgb_camera"      args="0 0 0 0 0 0 /camera /RGBCameraLeft " />
 
   <node pkg="tf2_ros" type="static_transform_publisher"
-        name="sim_depth_camera"      args="0 0 0 0 0 0 /depth_camera /Quadrotor/DepthCamera" />
+        name="sim_depth_camera"      args="0 0 0 0 0 0 /depth_camera /DepthCamera" />
 
   <node pkg="tf2_ros" type="static_transform_publisher"
-        name="sim_left_camera"      args="0 0 0 0 0 0 /camera /Quadrotor/RGBCameraLeft" />
+        name="sim_left_camera"      args="0 0 0 0 0 0 /camera /RGBCameraRight" />
 
   <node pkg="tf2_ros" type="static_transform_publisher"
         name="camera_to_body"      args="0 0 0 0 0 0 /true_body /camera" />
@@ -60,8 +60,6 @@
   <node pkg="tf2_ros" type="static_transform_publisher"
         name="depth_camera_to_body"      args="0 0 0 0 0 0 /true_body /depth_camera" />
 
-  <node pkg="tf2_ros" type="static_transform_publisher"
-        name="depth_camera_frame_to_body"      args="0 0 0 0 0 0 /true_body /Quadrotor/Sensors/DepthCamera" />
 
   <!-- added tf  -->
   <node pkg="tf2_ros" type="static_transform_publisher" 
