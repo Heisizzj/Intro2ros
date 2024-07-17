@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   mav_msgs
   eigen_conversions
   tf_conversions
+  nav_msgs
 )
 
 catkin_package(CATKIN_DEPENDS 
@@ -29,6 +30,7 @@ catkin_package(CATKIN_DEPENDS
   tf
   eigen_conversions
   tf_conversions
+  nav_msgs
 )
 
 find_package(Eigen3)

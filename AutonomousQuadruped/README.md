@@ -5,8 +5,9 @@
 2. Download the Unity Environment: https://syncandshare.lrz.de/getlink/fiLvgiTXetubiN1i4PRjuR/
 3. Unzip the Unity file and copy the files to .../devel/lib/simulation/
 4. Run a test:
-  a.) roslaunch simulation simulation.launch
-  b.) rosrun controller_pkg controller_node
+  a.) roslaunch perception perception.launch
+  b.) roslaunch planning planning.launch
+  c.) rosrun controller_pkg controller_node
   
 ## Perception Module dependencies
 
@@ -14,4 +15,5 @@
 `sudo apt-get install ros-noetic-octomap-rviz-plugins`
 `sudo apt-get install ros-noetic-octomap-server`
 `sudo apt-get install ros-noetic-depth-image-proc`
+`sudo apt-get install ros-noetic-move-base`
 

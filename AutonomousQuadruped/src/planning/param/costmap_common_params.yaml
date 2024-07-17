@@ -1,0 +1,17 @@
+footprint: [[-0.2, -0.2], [-0.2, 0.1], [0.2, 0.1], [0.2, -0.2]]
+
+obstacle_range: 5.0
+raytrace_range: 5.0
+
+inflation_radius: 0.30
+cost_scaling_factor: 0.0
+
+map_type: costmap
+
+observation_sources: point_cloud_sensor
+
+point_cloud_sensor: {sensor_frame: RoboDog/base_link/SensorHolder/Sensors/DepthCamera, data_type: PointCloud2, topic: /point_cloud, marking: true, clearing: true, min_obstacle_height: 1.0}
+
+static_layer:
+  map_topic: /projected_map
+  track_unknown_space: true

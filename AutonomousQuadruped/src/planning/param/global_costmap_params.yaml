@@ -1,0 +1,12 @@
+global_costmap:
+  global_frame: world
+  robot_base_frame: true_body
+
+  update_frequency: 100.0
+  publish_frequency: 100.0
+  transform_tolerance: 0.5
+  
+  always_send_full_costmap: true
+  static_map: true
+  origin_x: 0.0
+  origin_y: 0.0
