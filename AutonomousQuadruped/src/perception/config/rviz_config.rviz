@@ -27,7 +27,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -39,7 +39,7 @@ Visualization Manager:
       Cell Size: 1
       Class: rviz/Grid
       Color: 160; 160; 164
-      Enabled: true
+      Enabled: false
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
@@ -52,7 +52,7 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -65,7 +65,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -80,7 +80,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: true
       Filter (blacklist): ""
@@ -88,15 +88,15 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        Quadrotor/DepthCamera:
+        DepthCamera:
           Value: true
-        Quadrotor/RGBCameraLeft:
+        RGBCameraLeft:
           Value: true
-        Quadrotor/Sensors/DepthCamera:
-          Value: true
-        Quadrotor/TrueState:
+        RGBCameraRight:
           Value: true
         RoboDog/base_link/SensorHolder/Sensors/DepthCamera:
+          Value: true
+        TrueState:
           Value: true
         body:
           Value: true
@@ -115,36 +115,56 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        Quadrotor/TrueState:
+        TrueState:
           {}
         world:
           body:
             {}
           true_body:
-            Quadrotor/Sensors/DepthCamera:
-              {}
             camera:
-              Quadrotor/RGBCameraLeft:
+              RGBCameraLeft:
+                {}
+              RGBCameraRight:
                 {}
             depth_camera:
-              Quadrotor/DepthCamera:
+              DepthCamera:
                 {}
               RoboDog/base_link/SensorHolder/Sensors/DepthCamera:
                 {}
       Update Interval: 0
       Value: true
     - Class: octomap_rviz_plugin/OccupancyGrid
-      Enabled: true
-      Max. Height Display: inf
+      Enabled: false
+      Max. Height Display: 3.4028234663852886e+38
       Max. Octree Depth: 16
-      Min. Height Display: -inf
+      Min. Height Display: -3.4028234663852886e+38
       Name: OccupancyGrid
       Octomap Topic: /octomap_full
       Queue Size: 5
-      Value: true
+      Value: false
       Voxel Alpha: 1
       Voxel Coloring: Z-Axis
       Voxel Rendering: Occupied Voxels
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: Map
+      Topic: /projected_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic: /projected_map_pure
+      Unreliable: false
+      Use Timestamp: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -173,7 +193,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.57550048828125
+      Distance: 21.556983947753906
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -181,17 +201,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.19098255038261414
-        Y: 0.6661045551300049
-        Z: 0.4406924247741699
+        X: 3.523374557495117
+        Y: 3.614187240600586
+        Z: 2.434328317642212
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3353976905345917
+      Pitch: 1.009797215461731
       Target Frame: <Fixed Frame>
-      Yaw: 3.6054060459136963
+      Yaw: 4.695406436920166
     Saved: ~
 Window Geometry:
   Displays:
@@ -209,5 +229,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1637
-  X: 334
-  Y: 55
+  X: 613
+  Y: 200

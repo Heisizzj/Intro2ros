@@ -63,6 +63,6 @@
 
   <!-- added tf  -->
   <node pkg="tf2_ros" type="static_transform_publisher" 
-        name="Robodog_depth_camera_to_body" args="0 0 0 0 0 -1.75 /depth_camera /RoboDog/base_link/SensorHolder/Sensors/DepthCamera" />
+        name="Robodog_depth_camera_to_body" args="0 0 0 0 0 -1.745 /depth_camera /RoboDog/base_link/SensorHolder/Sensors/DepthCamera" />
 
 </launch>
