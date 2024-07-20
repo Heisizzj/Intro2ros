@@ -34,7 +34,11 @@ catkin_package(CATKIN_DEPENDS
 find_package(Eigen3)
 
 include_directories(${catkin_INCLUDE_DIRS})
+
 add_executable(controller_node src/controller_node.cpp)
 add_dependencies(controller_node ${catkin_EXPORTED_TARGETS})
-
 target_link_libraries(controller_node ${catkin_LIBRARIES})
+
+add_executable(direct_move src/direct_move.cpp)
+add_dependencies(direct_move ${catkin_EXPORTED_TARGETS})
+target_link_libraries(direct_move ${catkin_LIBRARIES})

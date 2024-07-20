@@ -57,11 +57,11 @@ public:
     mav_msgs::Actuators msg;
 
     msg.angular_velocities.resize(5);
-    msg.angular_velocities[0] = 0; // Phase between front and back legs (in degree)
-    msg.angular_velocities[1] = 90; // Phase between front left + back right legs and front right and left back legs
+    msg.angular_velocities[0] = 90; // Phase between front and back legs (in degree)
+    msg.angular_velocities[1] = 0; // Phase between front left + back right legs and front right and left back legs
     msg.angular_velocities[2] = 0; // Amplitude change of all legs
-    msg.angular_velocities[3] = 0; // Amplitude change of back legs (added to angular_velocities[2])
-    msg.angular_velocities[4] = 7; // Frequency of legs
+    msg.angular_velocities[3] = 20; // Amplitude change of back legs (added to angular_velocities[2])
+    msg.angular_velocities[4] = 0; // Frequency of legs
 
     commands.publish(msg);
 
@@ -74,3 +74,12 @@ int main(int argc, char** argv){
   controllerNode n;
   ros::spin();
 }
+
+    // FORWARD
+    // msg.angular_velocities.resize(5);
+    // msg.angular_velocities[0] = 0; // Phase between front and back legs (in degree)
+    // msg.angular_velocities[1] = 90; // Phase between front left + back right legs and front right and left back legs
+    // msg.angular_velocities[2] = 0; // Amplitude change of all legs
+    // msg.angular_velocities[3] = 0; // Amplitude change of back legs (added to angular_velocities[2])
+    // msg.angular_velocities[4] = 7; // Frequency of legs
+
