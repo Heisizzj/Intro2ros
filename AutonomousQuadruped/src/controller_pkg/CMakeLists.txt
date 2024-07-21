@@ -42,3 +42,7 @@ target_link_libraries(controller_node ${catkin_LIBRARIES})
 add_executable(direct_move src/direct_move.cpp)
 add_dependencies(direct_move ${catkin_EXPORTED_TARGETS})
 target_link_libraries(direct_move ${catkin_LIBRARIES})
+
+add_executable(control_with_keyboard src/control_with_keyboard.cpp)
+add_dependencies(control_with_keyboard ${catkin_EXPORTED_TARGETS})
+target_link_libraries(control_with_keyboard ${catkin_LIBRARIES})

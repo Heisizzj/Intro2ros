@@ -68,31 +68,31 @@ public:
         msg.angular_velocities[1] = 90; // Phase between front left + back right legs and front right and left back legs
         msg.angular_velocities[2] = 0; // Amplitude change of all legs
         msg.angular_velocities[3] = 0; // Amplitude change of back legs (added to angular_velocities[2])
-        msg.angular_velocities[4] = 7; // Frequency of legs
+        msg.angular_velocities[4] = 8; // Frequency of legs
       } else if (received_string == "a") {
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = -45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 7;
+        msg.angular_velocities[4] = 8;
       } else if (received_string == "s") {
-        msg.angular_velocities[0] = -10;
-        msg.angular_velocities[1] = 100;
-        msg.angular_velocities[2] = -1;
-        msg.angular_velocities[3] = -1;
+        msg.angular_velocities[0] = 90;
+        msg.angular_velocities[1] = 90;
+        msg.angular_velocities[2] = 0;
+        msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 8;
       } else if (received_string == "d") {
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = 45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 7;
-      } else if (received_string == "q") {
+        msg.angular_velocities[4] = 8;
+      } else if (received_string == "e") {   //test jump
         msg.angular_velocities[0] = 0;
-        msg.angular_velocities[1] = 0;
-        msg.angular_velocities[2] = 0;
-        msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 0;
+        msg.angular_velocities[1] = 90;
+        msg.angular_velocities[2] = 10;
+        msg.angular_velocities[3] = -5;
+        msg.angular_velocities[4] = 7;
       }
 
       // Publish the message

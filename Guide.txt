@@ -6,3 +6,5 @@
 
 在rosrun keyboard keyboard_node窗口中可以通过键盘控制机器狗前进，左转和右转
 分别对应'w','a','d'
+'e': climb one step
+klick 's' disretly: backwards
