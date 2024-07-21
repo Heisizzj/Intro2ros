@@ -4,5 +4,13 @@
 然后开一个terminal用于rosrun keyboard keyboard_node
 然后开一个terminal用于rosrun controller_pkg controller_node
 
-在rosrun keyboard keyboard_node窗口中可以通过键盘控制机器狗前进，左转和右转
-分别对应'w','a','d'
+//注意！！：退出程序时，按照FILO先进后出的顺序停止程序，可以最大可能性防止模拟不正常退出//
+
+在rosrun keyboard keyboard_node窗口中可以通过键盘控制机器狗
+w前进
+a左转
+d右转
+s抬前腿
+S高抬腿前进
+W小跑
+e稳定

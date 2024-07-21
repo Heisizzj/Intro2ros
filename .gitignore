@@ -1,4 +1,4 @@
-devel/
-logs/
-build/
-.catkin_tools/
+AutonomousQuadruped/devel/
+AutonomousQuadruped/logs/
+AutonomousQuadruped/build/
+AutonomousQuadruped/.catkin_tools/

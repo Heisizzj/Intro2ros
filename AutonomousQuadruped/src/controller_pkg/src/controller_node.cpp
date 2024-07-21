@@ -149,36 +149,60 @@ public:
       msg.angular_velocities.resize(5);
 
       // Adjust the message based on received string
-      if (received_string == "w") {
+      if (received_string == "w") {         // MODE: slowly FORWARD (PERFECT)
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = 90;
-        msg.angular_velocities[2] = 0;
+        msg.angular_velocities[2] = 2;
+        msg.angular_velocities[3] = 0;
+        msg.angular_velocities[4] = 10;
+      } else if (received_string == "W") {  // MODE: TROT (PERFECT)
+        msg.angular_velocities[0] = 0;
+        msg.angular_velocities[1] = 90;
+        msg.angular_velocities[2] = 5;
         msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 7;
-      } else if (received_string == "a") {
+      } else if (received_string == "a") {  // MODE: CCW ROTATE (PERFECT)
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = -45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 7;
-      } else if (received_string == "s") {
-        msg.angular_velocities[0] = -10;
-        msg.angular_velocities[1] = 100;
-        msg.angular_velocities[2] = -1;
-        msg.angular_velocities[3] = -1;
         msg.angular_velocities[4] = 8;
-      } else if (received_string == "d") {
+      } else if (received_string == "d") {  // MODE: CW ROTATE (PERFECT)
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = 45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 7;
-      } else if (received_string == "q") {
-        msg.angular_velocities[0] = 0;
+        msg.angular_velocities[4] = 8;
+      } else if (received_string == "s") {  // MODE: RAISE FORELEGS
+        msg.angular_velocities[0] = 90;
         msg.angular_velocities[1] = 0;
+        msg.angular_velocities[2] = -8;
+        msg.angular_velocities[3] = 20;
+        msg.angular_velocities[4] = 5;
+      }  else if (received_string == "S") { // MODE: HIGHAMP WALK
+        msg.angular_velocities[0] = 0;
+        msg.angular_velocities[1] = 90;
+        msg.angular_velocities[2] = 10;
+        msg.angular_velocities[3] = -5;
+        msg.angular_velocities[4] = 7;
+      } else if (received_string == "e") { // MODE: STEADYING
+        msg.angular_velocities[0] = 0;
+        msg.angular_velocities[1] = 90;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
-        msg.angular_velocities[4] = 0;
+        msg.angular_velocities[4] = 16;
+      } else if (received_string == "r") { // MODE: (test)
+        msg.angular_velocities[0] = 90;
+        msg.angular_velocities[1] = 0;
+        msg.angular_velocities[2] = -10;
+        msg.angular_velocities[3] = 0;
+        msg.angular_velocities[4] = 5;
+      } else if (received_string == "q") {  // MODE: STANDBY
+        msg.angular_velocities[0] = 0;  // Phase between front and back legs
+        msg.angular_velocities[1] = 0;  // Phase between front left + back right legs and front right and left back legs
+        msg.angular_velocities[2] = 0;  // Amplitude change of all legs
+        msg.angular_velocities[3] = 0;  // Amplitude change of back legs
+        msg.angular_velocities[4] = 0;  // Frequency of legs
       }
 
       // Publish the message

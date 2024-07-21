@@ -211,6 +211,9 @@
 #define KEYCODE_A 0x61
 #define KEYCODE_S 0x73
 #define KEYCODE_D 0x64
+#define KEYCODE_E 0x65
+#define KEYCODE_Q 0x71
+#define KEYCODE_R 0x72
 
 #define KEYCODE_A_CAP 0x41
 #define KEYCODE_D_CAP 0x44
@@ -295,8 +298,8 @@ void SmartCarKeyboardTeleopNode::keyboardLoop()
     tcsetattr(kfd, TCSANOW, &raw);
 
     puts("Reading from keyboard");
-    puts("Use WASD keys to control the robot");
-    puts("Press Shift to move faster");
+    puts("Use WASDER keys to control the robot");
+    puts("Press Capslock to use further maneuvers");
 
     struct pollfd ufd;
     ufd.fd = kfd;
@@ -364,6 +367,14 @@ void SmartCarKeyboardTeleopNode::keyboardLoop()
                 speed = 0;
                 turn = -1;
                 key_msg.data = "d";
+                dirty = true;
+                break;
+            case KEYCODE_E:
+                key_msg.data = "e";
+                dirty = true;
+                break;
+            case KEYCODE_Q:
+                key_msg.data = "q";
                 dirty = true;
                 break;
             case KEYCODE_W_CAP:
