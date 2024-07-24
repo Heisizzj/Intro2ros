@@ -1,0 +1,22 @@
+<launch>
+  <arg name="depth_info_topic"               default="/realsense/depth/camera_info"/>
+  <arg name="depth_image_topic"              default="/realsense/depth/image"/>
+  <arg name="point_cloud"                    default="/point_cloud"/>
+  
+  <!-- Nodelet to "register" a depth image -->
+  <node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager" />
+
+  <node pkg="nodelet" type="nodelet" name="nodelet_point_cloud" args="load depth_image_proc/point_cloud_xyz nodelet_manager">
+    
+    <!-- subscribe -->  
+    <remap from="camera_info" to="$(arg depth_info_topic)" />
+    <remap from="image_rect" to="$(arg depth_image_topic)" />
+
+    <!-- publish -->
+    <remap from="points" to="$(arg point_cloud)" />
+
+
+  </node>
+
+
+</launch>
