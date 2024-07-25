@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     return 0;
 }
 */
-
+/*
 class PathOccupancyChecker
 {
 public:
@@ -167,6 +167,95 @@ private:
     ros::Subscriber octomap_sub_;
     ros::Publisher occupancy_pub_;
     octomap::OcTree* octree_;
+};
+
+int main(int argc, char** argv)
+{
+    ros::init(argc, argv, "path_occupancy_checker");
+
+    PathOccupancyChecker checker;
+
+    ros::spin();
+
+    return 0;
+}
+*/
+
+class PathOccupancyChecker
+{
+public:
+    PathOccupancyChecker()
+    {
+        // 订阅路径点话题
+        path_sub_ = nh_.subscribe("move_base_Quadruped/NavfnROS/plan", 1, &PathOccupancyChecker::pathCallback, this);
+
+        // 订阅2D占用网格话题
+        grid_sub_ = nh_.subscribe("projected_map", 1, &PathOccupancyChecker::gridCallback, this);
+
+        // 发布占用状态
+        occupancy_pub_ = nh_.advertise<std_msgs::Bool>("path_occupancy_status", 1);
+
+        // 初始化标志
+        grid_received_ = false;
+    }
+
+private:
+    void gridCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+    {
+        grid_ = *msg;
+        grid_received_ = true;
+    }
+
+    void pathCallback(const nav_msgs::Path::ConstPtr& path)
+    {
+        if (!grid_received_)
+        {
+            ROS_WARN("OccupancyGrid has not been received yet.");
+            return;
+        }
+
+        bool is_occupied = false;
+
+        for (const auto& pose : path->poses)
+        {
+            int grid_x = (pose.pose.position.x - grid_.info.origin.position.x) / grid_.info.resolution;
+            int grid_y = (pose.pose.position.y - grid_.info.origin.position.y) / grid_.info.resolution;
+
+            // 检查索引是否在网格范围内
+            if (grid_x >= 0 && grid_x < grid_.info.width && grid_y >= 0 && grid_y < grid_.info.height)
+            {
+                int index = grid_y * grid_.info.width + grid_x;
+
+                if (grid_.data[index] > 50) // 占用概率大于50表示被占用
+                {
+                    is_occupied = true;
+                    break;
+                }
+            }
+        }
+
+        // 发布占用状态
+        std_msgs::Bool occupancy_msg;
+        occupancy_msg.data = is_occupied;
+        occupancy_pub_.publish(occupancy_msg);
+
+        // 打印占用状态
+        if (is_occupied)
+        {
+            ROS_INFO("Path is occupied.");
+        }
+        else
+        {
+            ROS_INFO("Path is free.");
+        }
+    }
+
+    ros::NodeHandle nh_;
+    ros::Subscriber path_sub_;
+    ros::Subscriber grid_sub_;
+    ros::Publisher occupancy_pub_;
+    nav_msgs::OccupancyGrid grid_;
+    bool grid_received_;
 };
 
 int main(int argc, char** argv)
