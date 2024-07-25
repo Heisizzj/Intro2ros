@@ -1,0 +1,4 @@
+<launch>
+  <node name="path_occupancy_checker" pkg="path_occupancy_checker" type="path_occupancy_checker" output="screen">
+  </node>
+</launch>
