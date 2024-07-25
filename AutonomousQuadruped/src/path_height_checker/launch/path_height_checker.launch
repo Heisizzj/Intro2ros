@@ -1,0 +1,4 @@
+<launch>
+  <node name="path_height_checker" pkg="path_height_checker" type="path_height_checker" output="screen">
+  </node>
+</launch>
