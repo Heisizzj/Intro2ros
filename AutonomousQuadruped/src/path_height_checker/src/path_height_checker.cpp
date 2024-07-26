@@ -202,7 +202,7 @@ int main(int argc, char** argv)
 }
 */
 
-/*
+
 
 class PathOccupancyChecker
 {
@@ -238,13 +238,13 @@ private:
             return;
         }
 
-        double height_threshold = 0.0; // 定义高度阈值
+        double height_threshold = 0.05; // 定义高度阈值
         std_msgs::Float32 height_msg;
         bool is_occupied = false;
         double zmin = 0.01; // 最小高度
         double zmax = 0.15; // 最大高度
         // 使用ROS_INFO打印路径点的占用状态
-        for (const auto& pose : path->poses)
+        /*for (const auto& pose : path->poses)
         {
             for (double z = zmin; z <= zmax; z += octree_->getResolution())
             {
@@ -273,10 +273,14 @@ private:
                     ROS_INFO("Point (%.2f, %.2f, %.2f) is not in the map.", pose.pose.position.x, pose.pose.position.y, z);
                 }
             }
+        }
+        
+
         // 使用ROS_INFO打印路径点的高度状态
         for (const auto& pose : path->poses)
         {
-            for (double z = 0.0; z <= octree_->getBBXMax().z(); z += octree_->getResolution())
+            
+            for (double z = zmin; z <= zmax; z += octree_->getResolution())
             {
                 octomap::point3d coord(pose.pose.position.x, pose.pose.position.y, z);
 
@@ -298,20 +302,55 @@ private:
                         return;
                     }
                 }
-            }
-
+         
         }
-        
-        }
-
         // 如果没有超过高度阈值的情况，则发布默认值
         height_msg.data = 0.0;
-        height_pub_.publish(height_msg);
-        
-        
-        
-      
+        height_pub_.publish(height_msg);*/
+
+        for (const auto& pose : path->poses)
+        {
+            bool height_exceeds_threshold = false;
+            for (double z = zmin; z <= zmax; z += octree_->getResolution())
+            {
+                octomap::point3d coord(pose.pose.position.x, pose.pose.position.y, z);
+
+                // 查找对应的栅格
+                octomap::OcTreeNode* node = octree_->search(coord);
+
+                if (node)
+                {
+                    double occupancy_prob = node->getOccupancy();
+
+                    // 如果占用概率大于0.5，并且高度超过阈值，则记录高度
+                    if (occupancy_prob > 0.8 && z > height_threshold)
+                    {
+                        height_exceeds_threshold = true;
+                        height_msg.data = z;
+                        height_pub_.publish(height_msg);
+                        ROS_INFO("Point (%.2f, %.2f, %.2f) exceeds height threshold. Height: %.2f", pose.pose.position.x, pose.pose.position.y, z, z);
+                        break; // 跳出当前路径点的高度检查
+                    }
+                }
+            }
+            if (!height_exceeds_threshold)
+            {
+                // 如果没有超过高度阈值的情况，则发布0.0
+                height_msg.data = 0.0;
+                height_pub_.publish(height_msg);
+                ROS_INFO("Point (%.2f, %.2f) does not exceed height threshold. Published height: 0.0", pose.pose.position.x, pose.pose.position.y);
+            }
+        }
+
     }
+
+
+
+
+
+
+
+
 
     ros::NodeHandle nh_;
     ros::Subscriber path_sub_;
@@ -320,6 +359,11 @@ private:
     ros::Publisher occupancy_pub_;
     octomap::OcTree* octree_;
 };
+
+
+
+
+
 
 int main(int argc, char** argv)
 {
@@ -332,8 +376,14 @@ int main(int argc, char** argv)
     return 0;
 }
 
-*/
 
+
+
+
+
+
+
+/*
 class PathHeightChecker
 {
 public:
@@ -355,15 +405,7 @@ public:
 private:
     void octomapCallback(const octomap_msgs::Octomap::ConstPtr& msg)
     {
-        // 将OctoMap消息转换为Octree对象
-        octomap::AbstractOcTree* abstract_tree = octomap_msgs::msgToMap(*msg);
-        octree_ = dynamic_cast<octomap::OcTree*>(abstract_tree);
-    }
-
-    void pathCallback(const nav_msgs::Path::ConstPtr& path)
-    {
-        if (!octree_)
-        {
+        // 将OctoMap消息转换为Octree对象for (double z = zmin; z <= zmax; z += octree_->getResolution())
             ROS_WARN("OctoMap has not been received yet.");
             return;
         }
@@ -373,6 +415,8 @@ private:
         for (const auto& pose : path->poses)
         {
             octomap::point3d coord(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z);
+            ROS_INFO("Coord z: %.2f", coord.z());
+            ROS_INFO("Point (%.2f, %.2f, %.2f) is not in the map.", pose.pose.position.x, pose.pose.position.y, pose.pose.position.z);
 
             // 查找对应的栅格
             octomap::OcTreeNode* node = octree_->search(coord);
@@ -386,6 +430,9 @@ private:
                     max_height = z;
                 }
             }
+            
+
+        
         }
 
         // 发布最高点高度
@@ -414,3 +461,30 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
+*/
+
+        /*float max_height = std::numeric_limits<float>::lowest();
+        std::cout << "Initial max_height: " << max_height << std::endl;
+        
+        for (const auto& pose : path->poses)
+        {
+            for (double z = zmin; z <= zmax; z += octree_->getResolution())
+            {
+                octomap::point3d coord(pose.pose.position.x, pose.pose.position.y, z);
+                octomap::OcTreeNode* node = octree_->search(coord);
+                
+
+                if (node)
+                {
+                float z = coord.z();
+                ROS_INFO("Current z: %.2f", z);
+                
+                    if (z > max_height)
+                    {
+                    max_height = z;
+                    }
+                    ROS_INFO("Maximum height along path: %.2f", max_height);
+                }
+            }
+        }*/
