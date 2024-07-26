@@ -226,7 +226,7 @@ private:
             {
                 int index = grid_y * grid_.info.width + grid_x;
 
-                if (grid_.data[index] > 50) // 占用概率大于50表示被占用
+                if (grid_.data[index] > 10) // 占用概率大于50表示被占用
                 {
                     is_occupied = true;
                     break;
