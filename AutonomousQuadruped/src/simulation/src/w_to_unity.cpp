@@ -81,6 +81,11 @@ class UDPPoseStreamer {
 
 void wCallback(const mav_msgs::Actuators& cmd)
 {
+  if (cmd.angular_velocities.size() < 5) {
+      ROS_ERROR("Received mav_msgs::Actuators message with insufficient size");
+      return;
+  }
+
   //streamer.PublishPose(msg);
   // print all the remaining numbers
   Arr[0]=cmd.angular_velocities[0];

@@ -4,8 +4,8 @@
 #include <tf_conversions/tf_eigen.h>
 #include <eigen_conversions/eigen_msg.h>
 #include <mav_msgs/Actuators.h>
-#include <nav_msgs/Path.h>
 #include <nav_msgs/Odometry.h>
+#include <nav_msgs/Path.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <math.h>
 #include <std_msgs/Float64.h>
@@ -14,46 +14,44 @@
 
 #define PI M_PI
 
+enum RobotState {
+  ROTATING,
+  MOVING_FORWARD,
+  IDLE
+};
+
 class controllerNode {
   ros::NodeHandle nh;
 
   ros::Publisher commands;
-  ros::Subscriber plan_sub;
   ros::Subscriber state_est_sub;
+  ros::Subscriber path_sub;
   ros::Timer control_timer;
-  ros::Timer plan_update_timer;
+  ros::Timer log_timer;
+  ros::Timer path_update_timer;
 
   // Controller internals
-  Eigen::Vector3d x;     // current position of the robot
-  Eigen::Quaterniond q;  // current orientation of the robot
-  Eigen::Vector3d xd;    // desired position of the robot
+  Eigen::Vector3d x;         // current position of the robot
+  Eigen::Quaterniond q;      // current orientation of the robot
+  std::deque<Eigen::Vector3d> path_points; // filtered path points
+  Eigen::Vector3d xd;        // desired position of the robot
+  Eigen::Vector3d initial_x; // initial position of the robot
+  Eigen::Quaterniond initial_q; // initial orientation of the robot
 
-  double hz;             // frequency of the main control loop
-  double distance_threshold; // distance threshold for path points
-  bool first_plan_received; // flag to indicate if the first plan message has been received
+  double hz;                // frequency of the main control loop
+  double angle_tolerance;   // tolerance for angle alignment
+  double position_tolerance; // tolerance for position alignment
+  RobotState state;         // current state of the robot
+  bool initial_state_set;   // flag to indicate if the initial state has been set
 
 public:
-  controllerNode(): hz(100.0), distance_threshold(1.0), first_plan_received(false) {
+  controllerNode(): hz(40.0), angle_tolerance(0.1), position_tolerance(0.15), state(IDLE), initial_state_set(false) {
     commands = nh.advertise<mav_msgs::Actuators>("commands", 1);
-    plan_sub = nh.subscribe("/move_base_Quadruped/NavfnROS/plan", 1, &controllerNode::planCallback, this);
     state_est_sub = nh.subscribe("/current_state_est", 1, &controllerNode::stateEstCallback, this);
+    path_sub = nh.subscribe("/move_base_Quadruped/NavfnROS/plan", 1, &controllerNode::pathCallback, this);
     control_timer = nh.createTimer(ros::Rate(hz), &controllerNode::controlLoop, this);
-    plan_update_timer = nh.createTimer(ros::Duration(2.0), &controllerNode::planUpdateCallback, this);
-  }
-
-  void planCallback(const nav_msgs::Path::ConstPtr& msg) {
-    if (!msg->poses.empty()) {
-      for (const auto& pose : msg->poses) {
-        Eigen::Vector3d path_point(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z);
-        double distance = (path_point - x).norm();
-        if (distance > distance_threshold) {
-          xd = path_point;
-          first_plan_received = true; // Mark that the first plan message has been received
-          ROS_INFO("Received new target pose: x=%f, y=%f, z=%f", xd.x(), xd.y(), xd.z());
-          break;
-        }
-      }
-    }
+    log_timer = nh.createTimer(ros::Duration(1.0), &controllerNode::logInfo, this); // Log info every second
+    path_update_timer = nh.createTimer(ros::Duration(20.0), &controllerNode::updatePath, this); // Update path every second
   }
 
   void stateEstCallback(const nav_msgs::Odometry::ConstPtr& msg) {
@@ -61,57 +59,131 @@ public:
     x = Eigen::Vector3d(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);
     tf::quaternionMsgToEigen(msg->pose.pose.orientation, q);
 
-    // ROS_INFO("Current Pose: x=%f, y=%f, z=%f", x.x(), x.y(), x.z());
+    // Set initial state if not already set
+    if (!initial_state_set) {
+      initial_x = x;
+      initial_q = q;
+      initial_state_set = true;
+    }
   }
 
-  void planUpdateCallback(const ros::TimerEvent& event) {
-    // Trigger the plan callback manually
-    ros::topic::waitForMessage<nav_msgs::Path>("/move_base_Quadruped/NavfnROS/plan", nh, ros::Duration(1.0));
-  }
+  void pathCallback(const nav_msgs::Path::ConstPtr& msg) {
+    std::deque<Eigen::Vector3d> new_path_points;
 
-  void checkRotation(const Eigen::Vector3d& position, const Eigen::Vector3d& goal, mav_msgs::Actuators& msg) {
-    Eigen::Vector2d pos_2d(position.x(), position.y());
-    Eigen::Vector2d goal_2d(goal.x(), goal.y());
-
-    // Current robot orientation as a 2D vector
-    double yaw = tf::getYaw(tf::Quaternion(q.x(), q.y(), q.z(), q.w()));
-    Eigen::Vector2d orientation_2d(cos(yaw), sin(yaw));
-
-    // Vector from robot to goal
-    Eigen::Vector2d dist = goal_2d - pos_2d;
-
-    // Normalize vectors
-    Eigen::Vector2d distance_normalized = dist / dist.norm();
-    Eigen::Vector2d orientation_normalized = orientation_2d / orientation_2d.norm();
-
-    // Cosine of the angle between the two vectors
-    double cos_angle = distance_normalized.dot(orientation_normalized);
-
-    // Use cross product to determine the rotation direction
-    if (orientation_normalized.x() * distance_normalized.y() - orientation_normalized.y() * distance_normalized.x() <= 0) {
-      msg.angular_velocities = {0, 45, 0, 0, 7}; // Rotate clockwise
-    } else {
-      msg.angular_velocities = {0, -45, 0, 0, 7}; // Rotate counterclockwise
+    for (size_t i = 10; i < msg->poses.size(); i += 30) {
+      const auto& pose = msg->poses[i];
+      Eigen::Vector3d point(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z + 0.26);
+      new_path_points.push_back(point);
+      if (new_path_points.size() >= 10) {
+        break;
+      }
     }
 
-    // If the goal is directly in front, move forward
-    if (cos_angle > 0.87) { // Adjust the threshold as needed
-      msg.angular_velocities = {0, 90, 0, 0, 8}; // Move forward
+    path_points = new_path_points;
+  }
+
+  void updatePath(const ros::TimerEvent&) {
+    if (!path_points.empty() && initial_state_set) {
+      xd = path_points.front();
+      path_points.pop_front();
+      state = ROTATING;
+    }
+  }
+
+  void logInfo(const ros::TimerEvent& event) {
+    if (initial_state_set) {
+      ROS_INFO("Initial Pose: x=%f, y=%f, z=%f", initial_x.x(), initial_x.y(), initial_x.z());
+      ROS_INFO("Current Pose: x=%f, y=%f, z=%f", x.x(), x.y(), x.z());
+      ROS_INFO("Target Pose: x=%f, y=%f, z=%f", xd.x(), xd.y(), xd.z());
+      if (state == ROTATING) {
+        ROS_INFO("State: ROTATING");
+      } else if (state == MOVING_FORWARD) {
+        ROS_INFO("State: MOVING_FORWARD");
+      } else if (state == IDLE) {
+        ROS_INFO("State: IDLE");
+      }
+    }
+  }
+
+  void checkRotation(const Eigen::Vector3d& initial_position, const Eigen::Quaterniond& initial_orientation, const Eigen::Vector3d& current_position, const Eigen::Quaterniond& current_orientation, const Eigen::Vector3d& goal, mav_msgs::Actuators& msg) {
+    // Initial robot orientation as a 2D vector
+    double initial_yaw = tf::getYaw(tf::Quaternion(initial_orientation.x(), initial_orientation.y(), initial_orientation.z(), initial_orientation.w()));
+    double desired_yaw = atan2(goal.y() - initial_position.y(), goal.x() - initial_position.x());
+
+    double initial_yaw_error = desired_yaw - initial_yaw;
+
+    // Normalize initial_yaw_error to the range [-pi, pi]
+    while (initial_yaw_error > PI) initial_yaw_error -= 2 * PI;
+    while (initial_yaw_error < -PI) initial_yaw_error += 2 * PI;
+
+    // Determine rotation direction
+    if (initial_yaw_error > 0) {
+        msg.angular_velocities = {0, -45, 0, 0, 7}; // Rotate counterclockwise
+    } else {
+        msg.angular_velocities = {0, 45, 0, 0, 7}; // Rotate clockwise
+    }
+
+    // Current robot orientation as a 2D vector
+    double current_yaw = tf::getYaw(tf::Quaternion(current_orientation.x(), current_orientation.y(), current_orientation.z(), current_orientation.w()));
+
+    double current_yaw_error = desired_yaw - current_yaw;
+
+    // Normalize current_yaw_error to the range [-pi, pi]
+    while (current_yaw_error > PI) current_yaw_error -= 2 * PI;
+    while (current_yaw_error < -PI) current_yaw_error += 2 * PI;
+
+    // Determine rotation direction
+    if (fabs(current_yaw_error) > angle_tolerance) {
+      state = ROTATING;
+    } else {
+      state = MOVING_FORWARD;
     }
   }
 
   void controlLoop(const ros::TimerEvent& t) {
     mav_msgs::Actuators msg;
+    msg.angular_velocities = {0, 0, 0, 0, 0};
 
-    if (!first_plan_received) {
-      // If no plan received, keep the robot stationary
+    if (!initial_state_set) {
+      // If no initial state set, keep the robot stationary
       msg.angular_velocities = {0, 0, 0, 0, 0};
+      // 输出msg的值
+      if (!msg.angular_velocities.empty()) {
+        ROS_INFO("Publishing Actuator Commands: angular_velocities[0]: %f", msg.angular_velocities[0]);
+      }
       commands.publish(msg);
       return;
     }
 
-    // Check rotation and set the control command
-    checkRotation(x, xd, msg);
+    if (state == ROTATING) {
+      // Check rotation and set the control command
+      checkRotation(initial_x, initial_q, x, q, xd, msg);
+    } else if (state == MOVING_FORWARD) {
+      // Calculate the difference between current and desired positions
+      Eigen::Vector3d error = xd - x;
+      double distance = error.norm();
+
+      if (distance > position_tolerance) {
+        msg.angular_velocities = {0, 90, 0, 0, 8}; // Move forward
+      } else {
+        // Stop moving when within position tolerance and update initial state
+        msg.angular_velocities = {0, 0, 0, 0, 0};
+        if (!path_points.empty()) {
+          initial_x = x;
+          initial_q = q;
+          xd = path_points.front();
+          path_points.pop_front();
+          state = ROTATING; // Reset state to ROTATING
+        } else {
+          state = IDLE;
+        }
+      }
+    }
+
+    // 输出msg的值
+    //if (!msg.angular_velocities.empty()) {
+    //  ROS_INFO("Publishing Actuator Commands: angular_velocities[0]: %f", msg.angular_velocities[0]);
+    //}
 
     commands.publish(msg);
   }

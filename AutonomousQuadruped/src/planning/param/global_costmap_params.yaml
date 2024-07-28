@@ -2,8 +2,8 @@ global_costmap:
   global_frame: world
   robot_base_frame: true_body
 
-  update_frequency: 100.0
-  publish_frequency: 100.0
+  update_frequency: 40.0
+  publish_frequency: 80.0
   transform_tolerance: 0.5
   
   always_send_full_costmap: true

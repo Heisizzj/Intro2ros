@@ -12,6 +12,8 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Transform.h>
 
 #include <mutex>
 #include <cmath>
@@ -92,6 +94,17 @@ class StateEstimateCorruptorNode {
 		pose_corrupted.pose.position.x += drift_.position.x + whiteNoise(pos_white_sigma_);
 		pose_corrupted.pose.position.y += drift_.position.y + whiteNoise(pos_white_sigma_);
 		pose_corrupted.pose.position.z += drift_.position.z + whiteNoise(pos_white_sigma_);
+
+    	tf2::Quaternion original_orientation;
+    	tf2::fromMsg(pose.pose.orientation, original_orientation);
+
+    	tf2::Quaternion yaw_rotation;
+    	yaw_rotation.setRPY(0, 0, M_PI / 2);
+
+    	tf2::Quaternion new_orientation = yaw_rotation * original_orientation;
+    	new_orientation.normalize();
+
+    	pose_corrupted.pose.orientation = tf2::toMsg(new_orientation);
 
 		PublishCorruptedPose(pose_corrupted);
 

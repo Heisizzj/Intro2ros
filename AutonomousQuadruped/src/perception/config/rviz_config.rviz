@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1
+        - /TF1/Frames1
         - /OccupancyGrid1
         - /Current_State_Est1
         - /Projected_Map1
@@ -31,7 +32,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: PointCloud2
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -69,7 +70,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -84,32 +85,32 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Class: rviz/TF
       Enabled: true
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
         Quadrotor/DepthCamera:
-          Value: true
+          Value: false
         Quadrotor/RGBCameraLeft:
-          Value: true
+          Value: false
         Quadrotor/Sensors/DepthCamera:
-          Value: true
+          Value: false
         Quadrotor/TrueState:
-          Value: true
+          Value: false
         RoboDog/base_link/SensorHolder/Sensors/DepthCamera:
           Value: true
         body:
           Value: true
         camera:
-          Value: true
+          Value: false
         depth_camera:
-          Value: true
+          Value: false
         true_body:
-          Value: true
+          Value: false
         world:
           Value: true
       Marker Alpha: 1
@@ -283,7 +284,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.225647926330566
+      Distance: 2.6561341285705566
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -291,17 +292,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.049043238162994385
-        Y: 0.18052127957344055
-        Z: 1.2532981634140015
+        X: 0.17866306006908417
+        Y: -0.8168255090713501
+        Z: 0.7182064652442932
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7553969025611877
+      Pitch: 0.6903965473175049
       Target Frame: <Fixed Frame>
-      Yaw: 4.28045654296875
+      Yaw: 0.10227055847644806
     Saved: ~
 Window Geometry:
   Displays:

@@ -3,17 +3,20 @@
 
   <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
 		
-    <param name="resolution"                    value="0.05"/>
+    <param name="resolution"                    value="0.10"/>
 		   
     <!-- Static global frame in which the map will be published. -->
 	<param name="frame_id"        type="string" value="world" /> 
 	<param name="base_frame_id"                 value="world"/>
 		
 	<!-- Maximum range in meter for inserting point cloud data when dynamically building a map. -->
-	<param name="sensor_model/max_range"        value="15.0" />
+	<param name="sensor_model/max_range"        value="10.0" />
 
-	<param name="occupancy_min_z"               value="0.15" /> 
-    <param name="occupancy_max_z"               value="5.0" /> 
+	<param name="pointcloud_min_z" value="0.15" />
+    <param name="pointcloud_max_z" value="5.0" /> 
+
+    <param name="occupancy_min_z" value="0.15" /> 
+    <param name="occupancy_max_z" value="5.0" />
 
 	<param name="filter_ground"                 value="true"/>
 
