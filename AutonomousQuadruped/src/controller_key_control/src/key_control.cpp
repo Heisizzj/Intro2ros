@@ -32,6 +32,7 @@ class controllerNode{
   ros::NodeHandle nh;
 
   ros::Publisher commands;
+  ros::PUblisher keyoverride;
   ros::Subscriber string_sub;
   ros::Timer timer;
 
@@ -55,6 +56,7 @@ public:
   controllerNode():hz(1000.0), received_string(""){
 
       commands = nh.advertise<mav_msgs::Actuators>("commands", 1);
+      keyoverride = nh.advertise<std_msgs::String>("keyoverride", 1);
       timer = nh.createTimer(ros::Rate(hz), &controllerNode::controlLoop, this);
 
       // Subscribe to string messages
@@ -69,6 +71,10 @@ public:
       // Prepare mav_msgs::Actuators message
       mav_msgs::Actuators msg;
       msg.angular_velocities.resize(5);
+      
+      // Prepare mav_msgs::Actuators message
+      std_msgs::String ovmsg;
+      ovmsg.data = "0";
 
       // Adjust the message based on received string
       if (received_string == "w") {
@@ -77,48 +83,56 @@ public:
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 9;
+        ovmsg.data = "1";
       } else if (received_string == "a") {
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = -45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 8;
+        ovmsg.data = "1";
       } else if (received_string == "s") {
         msg.angular_velocities[0] = 45;
         msg.angular_velocities[1] = 0;
         msg.angular_velocities[2] = 5;
         msg.angular_velocities[3] = 45;
         msg.angular_velocities[4] = 7;
+        ovmsg.data = "1";
       } else if (received_string == "d") {
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = 45;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 8;
+        ovmsg.data = "1";
       } else if (received_string == "q") {
         msg.angular_velocities[0] = 0;
         msg.angular_velocities[1] = 0;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 0;
         msg.angular_velocities[4] = 0;
+        ovmsg.data = "1";
       } else if (received_string == "W") {
         msg.angular_velocities[0] = 60; // Phase between front and back legs (in degree)
         msg.angular_velocities[1] = 0; // Phase between front left + back right legs and front right and left back legs
         msg.angular_velocities[2] = 10; // Amplitude change of all legs
         msg.angular_velocities[3] = 30; // Amplitude change of back legs (added to angular_velocities[2])
         msg.angular_velocities[4] = 8; // Frequency of legs
+        ovmsg.data = "1";
       } else if (received_string == "A") {
         msg.angular_velocities[0] = 45;
         msg.angular_velocities[1] = 0;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 60;
         msg.angular_velocities[4] = 11;
+        ovmsg.data = "1";
       } else if (received_string == "S") {
         msg.angular_velocities[0] = 45;
         msg.angular_velocities[1] = 0;
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 60;
         msg.angular_velocities[4] = 10;
+        ovmsg.data = "1";
       } else if (received_string == "D") {
 
         msg.angular_velocities[0] = 45;
@@ -126,10 +140,12 @@ public:
         msg.angular_velocities[2] = 0;
         msg.angular_velocities[3] = 50;
         msg.angular_velocities[4] = 9;
+        ovmsg.data = "1";
       }
 
       // Publish the message
       commands.publish(msg);
+      keyoverride.publish(ovmsg);
 
       // Clear the received string
       received_string.clear();
