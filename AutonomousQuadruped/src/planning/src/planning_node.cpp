@@ -27,6 +27,8 @@
 
 #define PI M_PI
 
+
+
 class planning_node{
     ros::NodeHandle nh;
     ros::Subscriber robot_pos;  //current position subscriber
