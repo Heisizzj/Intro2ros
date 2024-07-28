@@ -32,7 +32,7 @@ class controllerNode{
   ros::NodeHandle nh;
 
   ros::Publisher commands;
-  ros::PUblisher keyoverride;
+  ros::Publisher keyoverride;
   ros::Subscriber string_sub;
   ros::Timer timer;
 

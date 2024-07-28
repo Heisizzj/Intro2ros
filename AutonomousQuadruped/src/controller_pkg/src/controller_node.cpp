@@ -52,7 +52,7 @@ public:
     commands = nh.advertise<mav_msgs::Actuators>("commands", 1);
     state_est_sub = nh.subscribe("/current_state_est", 1, &controllerNode::stateEstCallback, this);
     path_sub = nh.subscribe("/move_base_Quadruped/NavfnROS/plan", 1, &controllerNode::pathCallback, this);
-    keyoverride_sub = nh.subscribe("keyoverride", 1, &controllerNode::keyoverrideCallback, this);
+    //keyoverride_sub = nh.subscribe("keyoverride", 1, &controllerNode::keyoverrideCallback, this);
     control_timer = nh.createTimer(ros::Rate(hz), &controllerNode::controlLoop, this);
     log_timer = nh.createTimer(ros::Duration(1.0), &controllerNode::logInfo, this); // Log info every second
     path_update_timer = nh.createTimer(ros::Duration(20.0), &controllerNode::updatePath, this); // Update path every second
@@ -86,9 +86,9 @@ public:
     path_points = new_path_points;
   }
   
-  void keyoverrideCallback(const std_msgs::String::ConstPtr& msg) {
-    override_from_key = msg->data;
-  }
+  //void keyoverrideCallback(const std_msgs::String::ConstPtr& msg) {
+  //  override_from_key = msg->data;
+  //}
   
   void updatePath(const ros::TimerEvent&) {
     if (!path_points.empty() && initial_state_set) {
@@ -188,13 +188,10 @@ public:
       }
     }
 
-    // 输出msg的值
-    //if (!msg.angular_velocities.empty()) {
-    //  ROS_INFO("Publishing Actuator Commands: angular_velocities[0]: %f", msg.angular_velocities[0]);
+    //if (override_from_key != "1") {
+    //  commands.publish(msg);
     //}
-    if (override_from_key != "1") {
-      commands.publish(msg);
-    }
+    commands.publish(msg);
     
   }
 };
