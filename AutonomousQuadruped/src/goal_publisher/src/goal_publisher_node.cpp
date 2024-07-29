@@ -26,7 +26,8 @@ private:
   void initializeGoals() {
     // Define your five goals here
     goals_.emplace_back(createGoal(1.0, 1.90, 0.0));
-    goals_.emplace_back(createGoal(4.1, 1.30, 0.0));
+    goals_.emplace_back(createGoal(2.0, 1.80, 0.0));
+    goals_.emplace_back(createGoal(3.8, 1.30, 0.0));
     goals_.emplace_back(createGoal(4.30, 0.80, 0.0));
     goals_.emplace_back(createGoal(5.45, 0.58, 0.0));
     goals_.emplace_back(createGoal(5.50, 1.29, 0.0));
