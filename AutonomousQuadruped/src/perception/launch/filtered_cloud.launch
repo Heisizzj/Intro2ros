@@ -1,0 +1,5 @@
+<launch>
+  <arg name="filtered_cloud"                    default="/filtered_cloud"/>
+  <node name="point_cloud_filter" pkg="point_cloud_filter" type="point_cloud_filter_node"/> 
+
+</launch>

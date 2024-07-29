@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>perception</name>
+  <version>0.0.1</version>
+  <description>The description of your package</description>
+
+  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>depth_image_proc</build_depend>
+  <build_depend>octomap_server</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>depth_image_proc</exec_depend>
+  <exec_depend>octomap_server</exec_depend>
+
+</package>
