@@ -1,6 +1,4 @@
 <launch>
-  <!-- Perception pipeline. -->
-
   <arg name="point_cloud" default="/point_cloud"/>
 
   <!-- Generate Point cloud from depth image -->

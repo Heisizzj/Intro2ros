@@ -1,15 +1,18 @@
 ## Getting Started
 
 
-1. Copy the src-folder to your repository and build it
+1. Clone the repository and build it
 2. Download the Unity Environment: https://syncandshare.lrz.de/getlink/fiLvgiTXetubiN1i4PRjuR/
 3. Unzip the Unity file and copy the files to .../devel/lib/simulation/
 4. Run:
+  a.) roslaunch simulation run.launch
+5. There's a keyboard control mode for testing control params:
   a.) roslaunch simulation simulation.launch
-  a.) roslaunch perception perception.launch
-  b.) roslaunch planning planning.launch
-  c.) rosrun controller_pkg controller_node
-  
+  b.) roslaunch perception perception.launch
+  c.) roslaunch planning planning.launch
+  d.) rosrun controller_key_control key_control
+  e.) roslaunch key_board keyboard.launch
+ 
 ## Dependencies
 
 Install octomap, octomap-rviz-plugin, depth-image-proc, move-base:

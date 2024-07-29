@@ -1,0 +1,16 @@
+<launch>
+  
+    <include file="$(find simulation)/launch/simulation.launch" >
+    </include>
+  
+    <include file="$(find perception)/launch/perception.launch" >
+    </include>
+
+    <include file="$(find planning)/launch/planning.launch" >
+    </include>
+  
+    <node pkg="controller_pkg" type="controller_node" name="controller_node" output="screen" />
+
+    <include file="$(find goal_publisher)/launch/goal_publisher.launch" >
+    </include>
+</launch>

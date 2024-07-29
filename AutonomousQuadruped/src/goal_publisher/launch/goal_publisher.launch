@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="goal_publisher" type="goal_publisher_node" name="goal_publisher_node" output="screen"/>
+</launch>
+  
