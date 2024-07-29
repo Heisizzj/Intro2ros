@@ -55,7 +55,7 @@ public:
     //keyoverride_sub = nh.subscribe("keyoverride", 1, &controllerNode::keyoverrideCallback, this);
     control_timer = nh.createTimer(ros::Rate(hz), &controllerNode::controlLoop, this);
     log_timer = nh.createTimer(ros::Duration(1.0), &controllerNode::logInfo, this); // Log info every second
-    path_update_timer = nh.createTimer(ros::Duration(20.0), &controllerNode::updatePath, this); // Update path every second
+    path_update_timer = nh.createTimer(ros::Duration(25.0), &controllerNode::updatePath, this); // Update path every second
   }
 
   void stateEstCallback(const nav_msgs::Odometry::ConstPtr& msg) {
@@ -74,7 +74,7 @@ public:
   void pathCallback(const nav_msgs::Path::ConstPtr& msg) {
     std::deque<Eigen::Vector3d> new_path_points;
 
-    for (size_t i = 10; i < msg->poses.size(); i += 30) {
+    for (size_t i = 10; i < msg->poses.size(); i += 35) {
       const auto& pose = msg->poses[i];
       Eigen::Vector3d point(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z + 0.26);
       new_path_points.push_back(point);
