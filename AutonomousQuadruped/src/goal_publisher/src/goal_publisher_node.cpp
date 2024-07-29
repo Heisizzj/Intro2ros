@@ -7,7 +7,7 @@
 
 class GoalPublisherNode {
 public:
-  GoalPublisherNode() : ac_("move_base", true), current_goal_index_(0), tolerance_(0.32) {
+  GoalPublisherNode() : ac_("move_base", true), current_goal_index_(0), tolerance_(0.3) {
     // Wait for the action server to come up
     ROS_INFO("Waiting for the move_base action server...");
     ac_.waitForServer();
@@ -25,9 +25,9 @@ public:
 private:
   void initializeGoals() {
     // Define your five goals here
-    goals_.emplace_back(createGoal(1.3, 1.90, 0.0));
-    goals_.emplace_back(createGoal(3.2, 1.85, 0.0));
-    goals_.emplace_back(createGoal(4.21, 0.50, 0.0));
+    goals_.emplace_back(createGoal(0.1, 1.70, 0.0));
+    goals_.emplace_back(createGoal(3.4, 1.75, 0.0));
+    goals_.emplace_back(createGoal(4.30, 0.80, 0.0));
     goals_.emplace_back(createGoal(5.45, 0.58, 0.0));
     goals_.emplace_back(createGoal(5.50, 1.29, 0.0));
   }
