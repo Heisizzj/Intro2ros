@@ -74,7 +74,7 @@ public:
   void pathCallback(const nav_msgs::Path::ConstPtr& msg) {
     std::deque<Eigen::Vector3d> new_path_points;
 
-    for (size_t i = 10; i < msg->poses.size(); i += 40) {
+    for (size_t i = 10; i < msg->poses.size(); i += 30) {
       const auto& pose = msg->poses[i];
       Eigen::Vector3d point(pose.pose.position.x, pose.pose.position.y, pose.pose.position.z + 0.26);
       new_path_points.push_back(point);
